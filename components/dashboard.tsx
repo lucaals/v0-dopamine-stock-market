@@ -54,7 +54,6 @@ export function Dashboard({ onLogout }: DashboardProps) {
     setStocks(prev => {
       const newStocks = tickStocks(prev)
 
-      // Detect DOPAMINE spikes for user alerts
       const newAlerts: { text: string; type: 'spike' | 'crash' }[] = []
       for (const stock of newStocks) {
         if (stock.changePercent > 5) {
@@ -81,7 +80,6 @@ export function Dashboard({ onLogout }: DashboardProps) {
     }
   }, [handleTick])
 
-  // Secret BALANCECHANGE keyboard shortcut
   useEffect(() => {
     const SECRET_CODE = 'BALANCECHANGE'
     function handleKeyDown(e: KeyboardEvent) {
@@ -101,7 +99,6 @@ export function Dashboard({ onLogout }: DashboardProps) {
           setBalanceDialogOpen(true)
         }
       } else {
-        // Reset buffer on non-letter keys
         secretBufferRef.current = ''
       }
     }
@@ -111,7 +108,6 @@ export function Dashboard({ onLogout }: DashboardProps) {
   }, [])
 
   function handleBalanceChanged() {
-    // Re-read the user from storage (may have been modified by admin panel)
     const u = getUser()
     if (u) setUser(u)
   }
@@ -166,11 +162,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
           {alerts.map((alert, i) => (
             <div
               key={`${alert.text}-${i}`}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 font-mono text-sm font-bold shadow-lg animate-in slide-in-from-right-5 ${
-                alert.type === 'spike'
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 font-mono text-sm font-bold shadow-lg animate-in slide-in-from-right-5 ${alert.type === 'spike'
                   ? 'bg-gain/90 text-background'
                   : 'bg-loss/90 text-foreground'
-              }`}
+                }`}
             >
               {alert.type === 'spike' ? (
                 <Zap className="h-4 w-4" />
@@ -196,11 +191,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 setView('market')
                 setSelectedStock(null)
               }}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                view === 'market' && !selectedStock
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${view === 'market' && !selectedStock
                   ? 'bg-secondary text-foreground'
                   : 'text-muted-foreground hover:text-foreground'
-              }`}
+                }`}
             >
               <LayoutDashboard className="h-4 w-4" />
               Market
@@ -210,11 +204,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 setView('portfolio')
                 setSelectedStock(null)
               }}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                view === 'portfolio'
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${view === 'portfolio'
                   ? 'bg-secondary text-foreground'
                   : 'text-muted-foreground hover:text-foreground'
-              }`}
+                }`}
             >
               <Briefcase className="h-4 w-4" />
               Portfolio
@@ -228,9 +221,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
               {formatPrice(portfolioValue)}
             </div>
             <div
-              className={`font-mono text-xs font-medium ${
-                isPortfolioUp ? 'text-gain' : 'text-loss'
-              }`}
+              className={`font-mono text-xs font-medium ${isPortfolioUp ? 'text-gain' : 'text-loss'
+                }`}
             >
               {isPortfolioUp ? '+' : ''}
               {formatPercent((totalGain / 100000) * 100)}
@@ -257,11 +249,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
             setView('market')
             setSelectedStock(null)
           }}
-          className={`flex flex-1 items-center justify-center gap-1.5 py-2.5 text-sm font-medium ${
-            view === 'market' && !selectedStock
+          className={`flex flex-1 items-center justify-center gap-1.5 py-2.5 text-sm font-medium ${view === 'market' && !selectedStock
               ? 'border-b-2 border-primary text-foreground'
               : 'text-muted-foreground'
-          }`}
+            }`}
         >
           <LayoutDashboard className="h-4 w-4" />
           Market
@@ -271,11 +262,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
             setView('portfolio')
             setSelectedStock(null)
           }}
-          className={`flex flex-1 items-center justify-center gap-1.5 py-2.5 text-sm font-medium ${
-            view === 'portfolio'
+          className={`flex flex-1 items-center justify-center gap-1.5 py-2.5 text-sm font-medium ${view === 'portfolio'
               ? 'border-b-2 border-primary text-foreground'
               : 'text-muted-foreground'
-          }`}
+            }`}
         >
           <Briefcase className="h-4 w-4" />
           Portfolio
@@ -305,7 +295,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                   <TrendingUp className="h-5 w-5 text-gain" />
                 </div>
                 <div>
-                  <div className="text-xs text-gain/70">Top Gainer</div>
+                  <div className="text-xs text-gain/70">Highest Gain</div>
                   <div className="font-mono text-sm font-bold text-gain">
                     {topGainer.symbol} {formatPercent(topGainer.changePercent)}
                   </div>
@@ -319,7 +309,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                   <TrendingDown className="h-5 w-5 text-loss" />
                 </div>
                 <div>
-                  <div className="text-xs text-loss/70">Top Loser</div>
+                  <div className="text-xs text-loss/70">Highest Loss</div>
                   <div className="font-mono text-sm font-bold text-loss">
                     {topLoser.symbol} {formatPercent(topLoser.changePercent)}
                   </div>
@@ -341,7 +331,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
                   <Zap className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <div className="text-xs text-muted-foreground">P&L</div>
+                  <div className="text-xs text-muted-foreground">P&L (Profit & Loss)</div>
                   <div className={`font-mono text-sm font-bold ${isPortfolioUp ? 'text-gain' : 'text-loss'}`}>
                     {isPortfolioUp ? '+' : ''}{formatPrice(totalGain)}
                   </div>
