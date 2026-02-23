@@ -58,20 +58,19 @@ export function AuthScreen({ onLogin }: AuthScreenProps) {
         <div className="mb-8 text-center">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5">
             <Zap className="h-4 w-4 text-primary" />
-            <span className="font-mono text-sm text-primary">Simulated Trading</span>
+            <span className="font-mono text-sm text-primary">PROFIT SIMULATOR HARHAR</span>
           </div>
           <h1 className="mb-2 text-5xl font-bold tracking-tight text-foreground">
             DOPAMINE
           </h1>
           <p className="text-muted-foreground">
-            The stock market that hits different.
+            Burn your dopamine receptors even more
           </p>
         </div>
 
         <div
-          className={`rounded-xl border border-border bg-card p-6 shadow-2xl shadow-primary/5 ${
-            shake ? 'animate-shake' : ''
-          }`}
+          className={`rounded-xl border border-border bg-card p-6 shadow-2xl shadow-primary/5 ${shake ? 'animate-shake' : ''
+            }`}
           style={shake ? { animation: 'shake 0.5s ease-in-out' } : {}}
         >
           {step === 'invite' ? (
@@ -103,14 +102,14 @@ export function AuthScreen({ onLogin }: AuthScreenProps) {
                 Verify Code
               </button>
               <p className="mt-4 text-center text-xs text-muted-foreground">
-                {"Don't have an invite? Ask someone who's already in."}
+                {"Don't have an invite? Ask Bobby for one!"}
               </p>
             </form>
           ) : (
             <form onSubmit={handleUsernameSubmit}>
               <div className="mb-4 flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2 text-sm text-primary">
                 <TrendingUp className="h-4 w-4" />
-                {"You're in! Choose your trader name."}
+                {"Choose your navn"}
               </div>
               <label className="mb-2 block text-sm font-medium text-muted-foreground">
                 Username
@@ -122,7 +121,7 @@ export function AuthScreen({ onLogin }: AuthScreenProps) {
                   setUsername(e.target.value)
                   setError('')
                 }}
-                placeholder="diamondhands42"
+                placeholder="bobby"
                 className="mb-4 w-full rounded-lg border border-border bg-secondary px-4 py-3 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 autoFocus
                 maxLength={16}
@@ -140,7 +139,7 @@ export function AuthScreen({ onLogin }: AuthScreenProps) {
                 Start Trading
               </button>
               <p className="mt-4 text-center text-xs text-muted-foreground">
-                You start with $100,000 in simulated cash.
+                Starting with $100K dolla
               </p>
             </form>
           )}
