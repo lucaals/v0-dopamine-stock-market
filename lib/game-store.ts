@@ -3,6 +3,7 @@
 import { type Stock, type UserAccount, type Portfolio, type Transaction, initializeStocks, tickStocks } from './stocks'
 
 const STORAGE_KEY = 'dopamine_user'
+const ALL_USERS_KEY = 'dopamine_all_users'
 const STARTING_CASH = 100000
 
 export function getUser(): UserAccount | null {
@@ -28,15 +29,66 @@ export function createUser(username: string): UserAccount {
     },
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
+  // Also register in the all-users registry
+  registerUser(user)
   return user
 }
 
 export function saveUser(user: UserAccount): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(user))
+  // Keep the registry in sync
+  registerUser(user)
 }
 
 export function logout(): void {
   localStorage.removeItem(STORAGE_KEY)
+}
+
+// ── Multi-user registry for BALANCECHANGE ──
+
+function registerUser(user: UserAccount): void {
+  const all = getAllUsers()
+  const idx = all.findIndex(u => u.username === user.username)
+  if (idx >= 0) {
+    all[idx] = user
+  } else {
+    all.push(user)
+  }
+  localStorage.setItem(ALL_USERS_KEY, JSON.stringify(all))
+}
+
+export function getAllUsers(): UserAccount[] {
+  if (typeof window === 'undefined') return []
+  const data = localStorage.getItem(ALL_USERS_KEY)
+  if (!data) return []
+  try {
+    return JSON.parse(data)
+  } catch {
+    return []
+  }
+}
+
+export function modifyUserBalance(username: string, amount: number): { success: boolean; message: string } {
+  const all = getAllUsers()
+  const idx = all.findIndex(u => u.username === username)
+  if (idx < 0) {
+    return { success: false, message: `User "${username}" not found` }
+  }
+
+  all[idx].portfolio.cash = Number((all[idx].portfolio.cash + amount).toFixed(2))
+  localStorage.setItem(ALL_USERS_KEY, JSON.stringify(all))
+
+  // If this is the currently logged-in user, also update the active session
+  const current = getUser()
+  if (current && current.username === username) {
+    current.portfolio.cash = all[idx].portfolio.cash
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(current))
+  }
+
+  return {
+    success: true,
+    message: `${amount >= 0 ? 'Added' : 'Removed'} $${Math.abs(amount).toLocaleString()} ${amount >= 0 ? 'to' : 'from'} ${username}'s account`,
+  }
 }
 
 export function buyStock(

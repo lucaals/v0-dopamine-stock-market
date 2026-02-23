@@ -14,6 +14,7 @@ import { TickerBar } from './ticker-bar'
 import { StockTable } from './stock-table'
 import { StockDetail } from './stock-detail'
 import { PortfolioPanel } from './portfolio-panel'
+import { BalanceChangeDialog } from './balance-change-dialog'
 import {
   LayoutDashboard,
   Briefcase,
@@ -37,8 +38,10 @@ export function Dashboard({ onLogout }: DashboardProps) {
   const [view, setView] = useState<View>('market')
   const [selectedStock, setSelectedStock] = useState<string | null>(null)
   const [alerts, setAlerts] = useState<{ text: string; type: 'spike' | 'crash' }[]>([])
+  const [balanceDialogOpen, setBalanceDialogOpen] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const alertTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const secretBufferRef = useRef('')
 
   useEffect(() => {
     const initialStocks = initializeStocks()
@@ -78,6 +81,41 @@ export function Dashboard({ onLogout }: DashboardProps) {
     }
   }, [handleTick])
 
+  // Secret BALANCECHANGE keyboard shortcut
+  useEffect(() => {
+    const SECRET_CODE = 'BALANCECHANGE'
+    function handleKeyDown(e: KeyboardEvent) {
+      // Don't capture when typing in input fields
+      const tag = (e.target as HTMLElement)?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
+
+      const key = e.key.toUpperCase()
+      if (key.length === 1 && /[A-Z]/.test(key)) {
+        secretBufferRef.current += key
+        // Keep only the last N characters where N is the length of the secret code
+        if (secretBufferRef.current.length > SECRET_CODE.length) {
+          secretBufferRef.current = secretBufferRef.current.slice(-SECRET_CODE.length)
+        }
+        if (secretBufferRef.current === SECRET_CODE) {
+          secretBufferRef.current = ''
+          setBalanceDialogOpen(true)
+        }
+      } else {
+        // Reset buffer on non-letter keys
+        secretBufferRef.current = ''
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
+  function handleBalanceChanged() {
+    // Re-read the user from storage (may have been modified by admin panel)
+    const u = getUser()
+    if (u) setUser(u)
+  }
+
   function handleLogout() {
     logout()
     onLogout()
@@ -115,6 +153,12 @@ export function Dashboard({ onLogout }: DashboardProps) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <TickerBar stocks={stocks} />
+
+      <BalanceChangeDialog
+        open={balanceDialogOpen}
+        onClose={() => setBalanceDialogOpen(false)}
+        onBalanceChanged={handleBalanceChanged}
+      />
 
       {/* Alert toasts */}
       {alerts.length > 0 && (

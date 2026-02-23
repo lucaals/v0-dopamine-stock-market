@@ -8,7 +8,11 @@ interface TickerBarProps {
 }
 
 export function TickerBar({ stocks }: TickerBarProps) {
-  const items = [...stocks, ...stocks]
+  // Show top 40 most volatile stocks in the ticker
+  const topMovers = [...stocks]
+    .sort((a, b) => Math.abs(b.changePercent) - Math.abs(a.changePercent))
+    .slice(0, 40)
+  const items = [...topMovers, ...topMovers]
 
   return (
     <div className="w-full overflow-hidden border-b border-border bg-card/50">

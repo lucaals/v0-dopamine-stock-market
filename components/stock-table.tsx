@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { type Stock, formatPrice, formatPercent, formatNumber } from '@/lib/stocks'
 import { MiniChart } from './mini-chart'
-import { Search, ArrowUpDown, TrendingUp, TrendingDown } from 'lucide-react'
+import { Search, ArrowUpDown, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface StockTableProps {
   stocks: Stock[]
@@ -18,6 +18,8 @@ export function StockTable({ stocks, onSelectStock }: StockTableProps) {
   const [sortKey, setSortKey] = useState<SortKey>('marketCap')
   const [sortDir, setSortDir] = useState<SortDir>('desc')
   const [sectorFilter, setSectorFilter] = useState<string>('All')
+  const [page, setPage] = useState(0)
+  const PAGE_SIZE = 50
 
   const sectors = useMemo(() => {
     const s = new Set(stocks.map(st => st.sector))
@@ -69,6 +71,14 @@ export function StockTable({ stocks, onSelectStock }: StockTableProps) {
 
     return list
   }, [stocks, search, sortKey, sortDir, sectorFilter])
+
+  const totalPages = Math.ceil(filteredStocks.length / PAGE_SIZE)
+  const pagedStocks = filteredStocks.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
+
+  // Reset page when filters change
+  useEffect(() => {
+    setPage(0)
+  }, [search, sectorFilter])
 
   function handleSort(key: SortKey) {
     if (sortKey === key) {
@@ -159,7 +169,7 @@ export function StockTable({ stocks, onSelectStock }: StockTableProps) {
             </tr>
           </thead>
           <tbody>
-            {filteredStocks.map(stock => (
+            {pagedStocks.map(stock => (
               <tr
                 key={stock.symbol}
                 onClick={() => onSelectStock(stock.symbol)}
@@ -225,12 +235,50 @@ export function StockTable({ stocks, onSelectStock }: StockTableProps) {
             ))}
           </tbody>
         </table>
-        {filteredStocks.length === 0 && (
+        {pagedStocks.length === 0 && (
           <div className="py-12 text-center text-sm text-muted-foreground">
             No stocks found matching your search.
           </div>
         )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between rounded-xl border border-border bg-card/50 px-4 py-3">
+          <span className="font-mono text-xs text-muted-foreground">
+            {filteredStocks.length} stocks - Page {page + 1} of {totalPages}
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage(p => Math.max(0, p - 1))}
+              disabled={page === 0}
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i)}
+                className={`flex h-8 w-8 items-center justify-center rounded-lg font-mono text-xs font-medium transition-colors ${
+                  page === i
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+              disabled={page === totalPages - 1}
+              className="flex h-8 w-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:opacity-30 disabled:hover:bg-transparent"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
