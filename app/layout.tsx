@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'DOPAMINE - Simulated Stock Market',
-  description: 'The stock market that hits different. A simulated trading platform with wild volatility and pure adrenaline.',
+  title: 'Dopamine',
+  description: 'Burn za receptors',
   icons: {
     icon: [
       {
