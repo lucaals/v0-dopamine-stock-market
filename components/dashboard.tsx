@@ -163,8 +163,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
             <div
               key={`${alert.text}-${i}`}
               className={`flex items-center gap-2 rounded-lg px-4 py-2 font-mono text-sm font-bold shadow-lg animate-in slide-in-from-right-5 ${alert.type === 'spike'
-                  ? 'bg-gain/90 text-background'
-                  : 'bg-loss/90 text-foreground'
+                ? 'bg-gain/90 text-background'
+                : 'bg-loss/90 text-foreground'
                 }`}
             >
               {alert.type === 'spike' ? (
@@ -183,7 +183,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
-            <span className="text-lg font-bold tracking-tight text-foreground">DOPAMINE</span>
+            <span className="text-lg font-bold tracking-tight text-foreground">Dopamine</span>
           </div>
           <div className="hidden items-center gap-1 sm:flex">
             <button
@@ -192,8 +192,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 setSelectedStock(null)
               }}
               className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${view === 'market' && !selectedStock
-                  ? 'bg-secondary text-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
+                ? 'bg-secondary text-foreground'
+                : 'text-muted-foreground hover:text-foreground'
                 }`}
             >
               <LayoutDashboard className="h-4 w-4" />
@@ -205,8 +205,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
                 setSelectedStock(null)
               }}
               className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${view === 'portfolio'
-                  ? 'bg-secondary text-foreground'
-                  : 'text-muted-foreground hover:text-foreground'
+                ? 'bg-secondary text-foreground'
+                : 'text-muted-foreground hover:text-foreground'
                 }`}
             >
               <Briefcase className="h-4 w-4" />
@@ -250,8 +250,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
             setSelectedStock(null)
           }}
           className={`flex flex-1 items-center justify-center gap-1.5 py-2.5 text-sm font-medium ${view === 'market' && !selectedStock
-              ? 'border-b-2 border-primary text-foreground'
-              : 'text-muted-foreground'
+            ? 'border-b-2 border-primary text-foreground'
+            : 'text-muted-foreground'
             }`}
         >
           <LayoutDashboard className="h-4 w-4" />
@@ -263,8 +263,8 @@ export function Dashboard({ onLogout }: DashboardProps) {
             setSelectedStock(null)
           }}
           className={`flex flex-1 items-center justify-center gap-1.5 py-2.5 text-sm font-medium ${view === 'portfolio'
-              ? 'border-b-2 border-primary text-foreground'
-              : 'text-muted-foreground'
+            ? 'border-b-2 border-primary text-foreground'
+            : 'text-muted-foreground'
             }`}
         >
           <Briefcase className="h-4 w-4" />
@@ -355,7 +355,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
       {/* Footer */}
       <footer className="border-t border-border bg-card/30 px-4 py-3 text-center">
         <span className="font-mono text-xs text-muted-foreground/50">
-          DOPAMINE - Simulated Stock Market - Not real financial advice - Prices update every 1.5s
+          DOPAMINE - Prices update every 1.5s
         </span>
       </footer>
     </div>
