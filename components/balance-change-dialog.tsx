@@ -36,7 +36,6 @@ export function BalanceChangeDialog({ open, onClose, onBalanceChanged }: Balance
       setUsers(allUsers)
       setMessage(null)
       setAmount('')
-      // Default to the first user if available
       if (allUsers.length > 0 && !selectedUser) {
         setSelectedUser(allUsers[0].username)
       }
@@ -47,7 +46,7 @@ export function BalanceChangeDialog({ open, onClose, onBalanceChanged }: Balance
     e.preventDefault()
     const numAmount = parseFloat(amount)
     if (isNaN(numAmount) || numAmount <= 0) {
-      setMessage({ text: 'Enter a valid positive amount', type: 'error' })
+      setMessage({ text: 'Must be positive amount!!!!', type: 'error' })
       return
     }
     if (!selectedUser) {
@@ -61,7 +60,6 @@ export function BalanceChangeDialog({ open, onClose, onBalanceChanged }: Balance
     if (result.success) {
       setMessage({ text: result.message, type: 'success' })
       setAmount('')
-      // Refresh users list
       setUsers(getAllUsers())
       onBalanceChanged()
     } else {
@@ -94,8 +92,8 @@ export function BalanceChangeDialog({ open, onClose, onBalanceChanged }: Balance
               <Zap className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-foreground">Balance Control</h2>
-              <p className="text-xs text-muted-foreground">Admin - Modify account balances</p>
+              <h2 className="text-lg font-bold text-foreground">Balance Modifier</h2>
+              <p className="text-xs text-muted-foreground">secret administrative panelen</p>
             </div>
           </div>
           <button
@@ -200,26 +198,24 @@ export function BalanceChangeDialog({ open, onClose, onBalanceChanged }: Balance
               <button
                 type="button"
                 onClick={() => setMode('add')}
-                className={`flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-all ${
-                  mode === 'add'
-                    ? 'border-gain/50 bg-gain/10 text-gain'
-                    : 'border-border bg-secondary text-muted-foreground hover:text-foreground'
-                }`}
+                className={`flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-all ${mode === 'add'
+                  ? 'border-gain/50 bg-gain/10 text-gain'
+                  : 'border-border bg-secondary text-muted-foreground hover:text-foreground'
+                  }`}
               >
                 <Plus className="h-4 w-4" />
-                Add Funds
+                Add Funds (BIG PROFIT)
               </button>
               <button
                 type="button"
                 onClick={() => setMode('remove')}
-                className={`flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-all ${
-                  mode === 'remove'
-                    ? 'border-loss/50 bg-loss/10 text-loss'
-                    : 'border-border bg-secondary text-muted-foreground hover:text-foreground'
-                }`}
+                className={`flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-all ${mode === 'remove'
+                  ? 'border-loss/50 bg-loss/10 text-loss'
+                  : 'border-border bg-secondary text-muted-foreground hover:text-foreground'
+                  }`}
               >
                 <Minus className="h-4 w-4" />
-                Remove Funds
+                Remove Funds (BROKE)
               </button>
             </div>
           </div>
@@ -227,7 +223,7 @@ export function BalanceChangeDialog({ open, onClose, onBalanceChanged }: Balance
           {/* Amount */}
           <div>
             <label className="mb-1.5 block text-sm font-medium text-muted-foreground">
-              Amount (USD)
+              Amount (American Dolla's)
             </label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -238,7 +234,7 @@ export function BalanceChangeDialog({ open, onClose, onBalanceChanged }: Balance
                   setAmount(e.target.value)
                   setMessage(null)
                 }}
-                placeholder="10000"
+                placeholder="1000"
                 min="0"
                 step="0.01"
                 className="w-full rounded-lg border border-border bg-secondary py-2.5 pl-10 pr-4 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
@@ -262,11 +258,10 @@ export function BalanceChangeDialog({ open, onClose, onBalanceChanged }: Balance
           {/* Message */}
           {message && (
             <div
-              className={`rounded-lg px-3 py-2 text-sm font-medium ${
-                message.type === 'success'
-                  ? 'bg-gain/10 text-gain'
-                  : 'bg-loss/10 text-loss'
-              }`}
+              className={`rounded-lg px-3 py-2 text-sm font-medium ${message.type === 'success'
+                ? 'bg-gain/10 text-gain'
+                : 'bg-loss/10 text-loss'
+                }`}
             >
               {message.text}
             </div>
@@ -275,11 +270,10 @@ export function BalanceChangeDialog({ open, onClose, onBalanceChanged }: Balance
           {/* Submit */}
           <button
             type="submit"
-            className={`w-full rounded-lg py-3 font-semibold transition-all active:scale-[0.98] ${
-              mode === 'add'
-                ? 'bg-gain text-background hover:brightness-110'
-                : 'bg-loss text-foreground hover:brightness-110'
-            }`}
+            className={`w-full rounded-lg py-3 font-semibold transition-all active:scale-[0.98] ${mode === 'add'
+              ? 'bg-gain text-background hover:brightness-110'
+              : 'bg-loss text-foreground hover:brightness-110'
+              }`}
           >
             {mode === 'add' ? 'Add' : 'Remove'} {amount ? `$${parseFloat(amount).toLocaleString()}` : 'Funds'}
           </button>
