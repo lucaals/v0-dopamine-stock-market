@@ -739,4 +739,4 @@ export function formatPercent(pct: number): string {
 }
 
 // Valid invite codes
-export const VALID_INVITE_CODES = ['DOPAMINE2026', 'GETRICH', 'TOTHEMOON', 'BULL', 'DIAMOND']
+export const VALID_INVITE_CODES = ['LEANFIEND', 'PROFITLOVER', 'JEGELSKERPENGE', 'DUSØRPÅDINMOR', 'BISMILLAH']
